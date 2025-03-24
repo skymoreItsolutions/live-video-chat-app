@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TextInput, Alert, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, Alert, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useState } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Link, useNavigation } from 'expo-router';
@@ -14,7 +14,7 @@ export default function Signup() {
     name: "",
     password: "",
     user_name: "",
-    gender:"male"
+    gender: "male"
   });
 
   const navigation = useNavigation();
@@ -24,27 +24,26 @@ export default function Signup() {
     
     if (!signupData.email || !signupData.name || signupData.password.length < 5 || !signupData.user_name) {
       Alert.alert("Error", "Enter all required data");
-      setButtonLoader(false); // Ensure loader stops
+      setButtonLoader(false);
       return;
     }
 
-    let response = await axios.post(`${baseurl}/user/sendotp`, {email:signupData.email});
+    let response = await axios.post(`${baseurl}/user/sendotp`, { email: signupData.email });
 
-    if(response.data.success){
-      navigation.navigate("Verifyotp",{...signupData})
+    if (response.data.success) {
+      navigation.navigate("Verifyotp", { ...signupData });
+    } else {
+      Alert.alert(response.data.message);
     }
-    else{
-      Alert.alert(response.data.message)
-    }
-    // setTimeout(() => {
-        setButtonLoader(false);
-
-    // }, 2000);
-    
+    setButtonLoader(false);
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
       <View style={{ flex: 1, alignItems: "center", paddingTop: 20 }}>
         <Image source={require("../../assist/logo.jpg")} style={styles.logo} />
       </View>
@@ -54,7 +53,7 @@ export default function Signup() {
           <Text style={{ fontSize: 40, fontWeight: "800" }}>SignUp</Text>
         </View>
 
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.formContainer}>
             {/* Name Input */}
             <View>
@@ -115,23 +114,33 @@ export default function Signup() {
               />
             </View>
 
-            {/* Forgot Password Link */}
-            <View style={{flexDirection:"row",justifyContent:"space-evenly"}}>
-              <Text style={{fontSize:18}}>Gender</Text>
-              <TouchableOpacity activeOpacity={0.9} onPress={()=>setSignupData({ ...signupData, gender:"male" })} style={{flexDirection:"row",alignItems:"center",gap:5}}> 
-                <View style={{width:20 ,height:20,borderWidth:1,borderRadius:40,justifyContent:"center",alignItems:"center"}}>
-             {signupData.gender=="male" &&     <View style={{width:15 ,height:15,borderRadius:40,backgroundColor:"#41d69b"}} ></View>}
+            {/* Gender Selection */}
+            <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+              <Text style={{ fontSize: 18 }}>Gender</Text>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => setSignupData({ ...signupData, gender: "male" })}
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <View style={{ width: 20, height: 20, borderWidth: 1, borderRadius: 40, justifyContent: "center", alignItems: "center" }}>
+                  {signupData.gender === "male" && (
+                    <View style={{ width: 15, height: 15, borderRadius: 40, backgroundColor: "#41d69b" }} />
+                  )}
                 </View>
-                <Text style={{fontSize:18}}>Male</Text>
+                <Text style={{ fontSize: 18 }}>Male</Text>
               </TouchableOpacity>
 
-
-
-              <TouchableOpacity activeOpacity={0.9}  onPress={()=>setSignupData({ ...signupData, gender:"female" })} style={{flexDirection:"row",alignItems:"center",gap:5}}> 
-                <View style={{width:20 ,height:20,borderWidth:1,borderRadius:40,justifyContent:"center",alignItems:"center"}}>
-             {signupData.gender=="female" &&     <View style={{width:15 ,height:15,borderRadius:40,backgroundColor:"#41d69b"}} ></View>}
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => setSignupData({ ...signupData, gender: "female" })}
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <View style={{ width: 20, height: 20, borderWidth: 1, borderRadius: 40, justifyContent: "center", alignItems: "center" }}>
+                  {signupData.gender === "female" && (
+                    <View style={{ width: 15, height: 15, borderRadius: 40, backgroundColor: "#41d69b" }} />
+                  )}
                 </View>
-                <Text style={{fontSize:18}}>Female</Text>
+                <Text style={{ fontSize: 18 }}>Female</Text>
               </TouchableOpacity>
             </View>
 
@@ -146,7 +155,7 @@ export default function Signup() {
               <Text style={{ textAlign: "center" }}>OR</Text>
               <CustomButton
                 title="Login"
-                onPress={() => navigation.navigate("index")} 
+                onPress={() => navigation.navigate("index")}
                 textstyle={styles.buttonText}
                 layoutstyle={[styles.button, { backgroundColor: "green" }]}
               />
@@ -154,7 +163,7 @@ export default function Signup() {
           </View>
         </ScrollView>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -176,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "40%",
     borderTopLeftRadius: 9000,
-    borderTopRightRadius: 0, 
+    borderTopRightRadius: 0,
   },
   formContainer: {
     flex: 1,

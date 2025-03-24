@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity,SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import FriendList from '../../../components/FriendList';
 
@@ -11,7 +11,7 @@ export default function Friend() {
 
 
   return (
-    <View  >
+    <SafeAreaView  >
 <View style={{ flexDirection: "row"}}>
  
   <TouchableOpacity activeOpacity={9}  onPress={()=>setreq(!req)} style={{flex: !req ? 2 : 1,
@@ -62,6 +62,6 @@ export default function Friend() {
 
 
 
-    </View>
+    </SafeAreaView>
   )
 }

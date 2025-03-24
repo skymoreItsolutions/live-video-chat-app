@@ -1,4 +1,4 @@
-import { View, Text, TextInput, FlatList, Image, ActivityIndicator } from 'react-native'
+import { View, Text,SafeAreaView, TextInput, FlatList, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from "axios"
 import { baseurl } from '../../../components/baseurl'
@@ -59,7 +59,7 @@ return ()=>clearTimeout(inter)
 },[name])
 
   return (
-    <View style={{flex:1,backgroundColor:""}}>
+    <SafeAreaView style={{flex:1,backgroundColor:""}}>
      <TextInput ref={inputref} value={name} onChangeText={(text)=>setname(text)} placeholder='Search Friend' style={{margin:10,borderWidth:1,padding:10,borderRadius:10,borderColor: "#ccc"}} />
    
 { !loader && serachData &&
@@ -75,6 +75,6 @@ renderItem={({item})=><SearchFriendCompo item={item} /> }
 {loader && name && <ActivityIndicator size={50} color="red" />}
 
 
-    </View>
+    </SafeAreaView>
   )
 }

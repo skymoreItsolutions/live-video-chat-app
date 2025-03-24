@@ -28,7 +28,9 @@ app.use("/api/message",MessageRoute)
 app.use("/api/friend",friendRouter)
 
 
-
+app.get('/me',(req,res)=>{
+  res.send("Im Working")
+})
 
 const io=  new Server(server,{
     cors:{
